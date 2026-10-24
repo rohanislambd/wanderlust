@@ -48,6 +48,13 @@
   --radius-4xl: calc(var(--radius) * 2.6);
 }
 
+/* Brand palette — sampled from /images/Wanderlast.png */
+@theme {
+  --color-brand: #0093b1;
+  --color-brand-dark: #164e63;
+  --color-brand-soft: #e8f5fb;
+}
+
 :root {
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
