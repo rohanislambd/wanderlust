@@ -6,8 +6,8 @@ import { cn } from "cn"
 const navLinks = [
   { label: "Home", href: "/" },
   { label: "Destinations", href: "/destinations" },
+  {label:"Add Destination", href:"/add-destination"},
   { label: "My Bookings", href: "/my-bookings" },
-  { label: "Admin", href: "/admin" },
 ]
 
 export default function Navbar() {
