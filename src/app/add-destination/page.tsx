@@ -36,7 +36,16 @@ export default function AddDestinationPage() {
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    const res = await fetch('http://localhost:8000/add-destination',{
+        method:"POST",
+        headers:{
+             'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(form)
+    })
     
+    const data =await res.json();
+    console.log(data);
   };
 
 
