@@ -1,16 +1,42 @@
-import Image from "next/image"
-import Link from "next/link"
-import { User } from "lucide-react"
-import { cn } from "cn"
+"use client";
+import Image from "next/image";
+import Link from "next/link";
+import { User } from "lucide-react";
+import { cn } from "cn";
+import { authClient } from "@/lib/auth-client";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import {
+  Popover,
+  PopoverContent,
+  PopoverDescription,
+  PopoverHeader,
+  PopoverTitle,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { Button } from "./ui/button";
+import { useRouter } from "next/navigation";
 
 const navLinks = [
   { label: "Home", href: "/" },
   { label: "Destinations", href: "/destinations" },
-  {label:"Add Destination", href:"/add-destination"},
+  { label: "Add Destination", href: "/add-destination" },
   { label: "My Bookings", href: "/my-bookings" },
-]
+];
 
 export default function Navbar() {
+  const { data: session } = authClient.useSession();
+  const user = session?.user;
+  const router = useRouter();
+
+  const handleSignOut = async () => {
+    await authClient.signOut({
+      fetchOptions: {
+        onSuccess: () => {
+          router.push("/login"); // redirect to login page
+        },
+      },
+    });
+  };
   return (
     <header className="border-b border-border bg-background">
       <div className="relative flex h-16 items-center justify-end px-4 sm:px-6 md:h-20">
@@ -25,7 +51,7 @@ export default function Navbar() {
                 "text-sm font-medium transition-colors hover:text-brand",
                 link.href === "/"
                   ? "text-brand underline decoration-2 underline-offset-4"
-                  : "text-foreground/75"
+                  : "text-foreground/75",
               )}
             >
               {link.label}
@@ -58,20 +84,53 @@ export default function Navbar() {
             <User className="size-4" />
             Profile
           </Link>
-          <Link
-            href="/login"
-            className="text-sm font-medium text-foreground/75 transition-colors hover:text-brand"
-          >
-            Login
-          </Link>
-          <Link
-            href="/signup"
-            className="text-sm font-medium text-foreground/75 transition-colors hover:text-brand"
-          >
-            Sign Up
-          </Link>
+          {user ? (
+            <Popover>
+              <PopoverTrigger
+                render={
+                  <Avatar>
+                    <AvatarImage
+                      referrerPolicy={`no-referrer`}
+                      src={user?.image as string}
+                    />
+                    <AvatarFallback
+                      className={"bg-blue-400 text-white font-bold"}
+                    >
+                      {user?.name.charAt(0)}
+                    </AvatarFallback>
+                  </Avatar>
+                }
+              ></PopoverTrigger>
+              <PopoverContent>
+                <PopoverHeader>
+                  <PopoverTitle>{user?.name}</PopoverTitle>
+                  <PopoverDescription>
+                    <p>{user?.email}</p>
+                    <Button onClick={handleSignOut} variant={`destructive`}>
+                      SignOut
+                    </Button>
+                  </PopoverDescription>
+                </PopoverHeader>
+              </PopoverContent>
+            </Popover>
+          ) : (
+            <>
+              <Link
+                href="/login"
+                className="text-sm font-medium text-foreground/75 transition-colors hover:text-brand"
+              >
+                Login
+              </Link>
+              <Link
+                href="/signup"
+                className="text-sm font-medium text-foreground/75 transition-colors hover:text-brand"
+              >
+                Sign Up
+              </Link>
+            </>
+          )}
         </div>
       </div>
     </header>
-  )
+  );
 }

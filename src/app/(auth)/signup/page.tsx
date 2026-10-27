@@ -42,9 +42,9 @@ export default function SignUpPage() {
     <div className='max-w-xl  mx-auto flex flex-col my-10'>
       <Card>
         <CardHeader className="text-center">
-          <CardTitle className="text-xl">Welcome back</CardTitle>
+          <CardTitle className="text-xl">Sign Up</CardTitle>
           <CardDescription>
-            Login with your Apple or Google account
+              Sign up to create your account
           </CardDescription>
         </CardHeader>
         <CardContent>
