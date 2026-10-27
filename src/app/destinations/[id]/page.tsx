@@ -4,7 +4,6 @@ import {
   CalendarDaysIcon,
   CheckIcon,
   MapPinIcon,
-  PencilIcon,
   ServerOffIcon,
   StarIcon,
   Trash2Icon,
@@ -17,6 +16,7 @@ import DestinationHero from "@/components/destination-hero"
 import { playfairDisplay } from "@/lib/fonts"
 import { formatDuration } from "@/lib/format-duration"
 import { cn } from "cn"
+import EditDestinationDialog from "@/components/EditDestinationDialog"
 
 const DETAIL_API =
   process.env.NEXT_PUBLIC_DESTINATION_API ?? "http://localhost:8000/destination"
@@ -163,13 +163,8 @@ const DestinationDetailPage = async ({
 
       <div className="flex items-center gap-3">
         {/* TODO: point at a real edit route once one exists. */}
-        <Link
-          href="/add-destination"
-          className={cn(buttonVariants({ variant: "outline" }), "gap-2")}
-        >
-          <PencilIcon aria-hidden />
-          Edit
-        </Link>
+       
+        <EditDestinationDialog destination={destination} />
         <Link
           href="/destinations"
           className={cn(
