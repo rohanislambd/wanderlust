@@ -47,7 +47,8 @@ const MyBookingPage = async () => {
                         first trip.
                     </p>
                 ) : (
-                    <MyBookingCard  bookings ={bookings}/>
+                    bookings.map((booking) => <MyBookingCard key={booking._id}  booking ={booking}/>)
+                    
                 )}
             </div>
         </section>

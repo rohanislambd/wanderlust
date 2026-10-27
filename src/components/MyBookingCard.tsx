@@ -1,3 +1,4 @@
+'use client'
 import {
     CalendarDaysIcon,
     CheckCircle2Icon,
@@ -10,6 +11,7 @@ import Link from 'next/link';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { IBooking } from '@/app/my-bookings/page';
+import { useRouter } from 'next/navigation';
 function formatDate(date: string) {
     return new Date(`${date}T00:00:00`).toLocaleDateString('en-US', {
         month: 'long',
@@ -18,13 +20,22 @@ function formatDate(date: string) {
     });
 }
 
-const MyBookingCard = ({bookings}:{bookings:IBooking[]}) => {
+const MyBookingCard = ({booking}:{booking:IBooking}) => {
+    const router = useRouter()
+   
+    const handleCancelBooking =async () => {
+        const res = await fetch(`http://localhost:8000/my-bookings/${booking._id}`,{
+            method: "DELETE"
+        })
+        const data = await res.json();
+        router.refresh()
+    }
    
     return (
         <div className="mt-8 space-y-6">
-                        {bookings.map((booking) => (
+                      
                             <article
-                                key={booking._id}
+                            
                                 className="flex flex-col gap-5 rounded-xl border border-border bg-card p-4 shadow-sm sm:flex-row"
                             >
                                 {/* Booking image */}
@@ -69,6 +80,7 @@ const MyBookingCard = ({bookings}:{bookings:IBooking[]}) => {
 
                                         <div className="flex gap-3">
                                             <Button
+                                            onClick={handleCancelBooking}
                                                 variant="outline"
                                                 className="gap-1.5 border-destructive/40 text-destructive hover:bg-destructive/10 hover:text-destructive"
                                             >
@@ -90,7 +102,7 @@ const MyBookingCard = ({bookings}:{bookings:IBooking[]}) => {
                                     </div>
                                 </div>
                             </article>
-                        ))}
+                        
                     </div>
     );
 };
