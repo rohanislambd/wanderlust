@@ -15,21 +15,22 @@ import { playfairDisplay } from "@/lib/fonts"
 import { formatDuration } from "@/lib/format-duration"
 import EditDestinationDialog from "@/components/EditDestinationDialog"
 import DeleteDestination from "@/components/DeleteDestination"
+import { IDestination } from "@/types/destination"
 
 const DETAIL_API =
   process.env.NEXT_PUBLIC_DESTINATION_API ?? "http://localhost:8000/destination"
 
-type DestinationDetail = {
-  id: string
-  name: string
-  country: string
-  category: string
-  price: string
-  duration: string
-  departureDate: string
-  imageUrl: string | null
-  description: string
-}
+// type DestinationDetail = {
+//   id: string
+//   name: string
+//   country: string
+//   category: string
+//   price: string
+//   duration: string
+//   departureDate: string
+//   imageUrl: string | null
+//   description: string
+// }
 
 /** The API doesn't send highlights yet — show a curated set per category. */
 const HIGHLIGHTS: Record<string, string[]> = {
@@ -83,7 +84,7 @@ const str = (record: Record<string, unknown>, key: string): string => {
   return typeof value === "string" ? value.trim() : ""
 }
 
-function toDestinationDetail(payload: unknown): DestinationDetail | null {
+function toDestinationDetail(payload: unknown): IDestination | null {
   if (!payload || typeof payload !== "object") return null
 
   const record = payload as Record<string, unknown>
@@ -109,7 +110,7 @@ function toDestinationDetail(payload: unknown): DestinationDetail | null {
   }
 }
 
-async function getDestination(id: string): Promise<DestinationDetail | null> {
+async function getDestination(id: string): Promise<IDestination | null> {
   try {
     const res = await fetch(`${DETAIL_API}/${id}`, { cache: "no-store" })
     if (!res.ok) throw new Error(`API responded with ${res.status}`)
@@ -160,10 +161,13 @@ const DestinationDetailPage = async ({
       </Link>
 
       <div className="flex items-center gap-3">
-        {/* TODO: point at a real edit route once one exists. */}
-       
-        <EditDestinationDialog destination={destination} />
-        <DeleteDestination id={destination?.id}/>
+        {/* Only meaningful once we actually have a record to edit/delete. */}
+        {destination && (
+          <>
+            <EditDestinationDialog destination={destination} />
+            <DeleteDestination id={destination.id} />
+          </>
+        )}
       </div>
     </div>
   )

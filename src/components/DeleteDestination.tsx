@@ -15,7 +15,7 @@ import { Button } from "./ui/button";
 import { Trash2Icon } from "lucide-react";
 import { redirect } from "next/navigation";
 
-const DeleteDestination = ({id}) => {
+const DeleteDestination = ({id}:{id:string}) => {
 
     const handleDeleteDestination = async() => {
        const res  = await fetch(`http://localhost:8000/destination/${id}`,{

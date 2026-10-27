@@ -24,17 +24,20 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import toast from "react-hot-toast";
+import { IDestination } from "@/types/destination";
 
 
 const categories = ["Beach", "Mountain", "City", "Adventure", "Cultural"];
 
+interface EditDestinationDialogProps {
+  destination: IDestination;
+}
 
-const EditDestinationDialog = ({ destination }) => {
+const EditDestinationDialog = ({ destination }: EditDestinationDialogProps) => {
+  const [form, setForm] = useState<IDestination>(destination);
 
-  const [form, setForm] = useState(destination);
-
-  const update = (field: keyof typeof form, value: string) =>
-    setForm((current) => ({ ...current, [field]: value }));
+  const update = (field: keyof IDestination, value: string) =>
+    setForm((current) => ({ ...current, [field]: value }) as IDestination);
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -165,7 +168,7 @@ const EditDestinationDialog = ({ destination }) => {
                     id="imageUrl"
                     type="url"
                     placeholder="https://example.com/image.jpg"
-                    value={form.imageUrl}
+                    value={form.imageUrl ?? ""}
                     onChange={(event) => update("imageUrl", event.target.value)}
                     required
                   />
