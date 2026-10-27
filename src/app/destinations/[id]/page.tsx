@@ -284,9 +284,9 @@ const DestinationDetailPage = async ({
 
           {/* Booking sidebar */}
           <BookingCard
-            name={destination.name}
-            price={destination.price || "0"}
+            
             departureDate={destination.departureDate}
+            destination={destination}
           />
         </div>
       </div>

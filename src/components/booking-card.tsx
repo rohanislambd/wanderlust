@@ -6,6 +6,9 @@ import toast from "react-hot-toast"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { IDestination } from "@/types/destination"
+import { authClient } from "@/lib/auth-client"
+import { email } from "better-auth"
 
 const PERKS = [
   "Free cancellation up to 7 days",
@@ -24,15 +27,42 @@ function formatLongDate(isoDate: string): string {
   })
 }
 
-export default function BookingCard({
-  name,
-  price,
-  departureDate,
-}: {
-  name: string
-  price: string
-  departureDate: string
-}) {
+interface BookingCardProps {
+destination: IDestination
+departureDate: string
+}
+
+export default function BookingCard({destination, departureDate}: BookingCardProps) {
+  
+
+      const { data: session } = authClient.useSession();
+      const user = session?.user;
+   
+
+      const handleBooking = async (e: React.SyntheticEvent<HTMLFormElement>) => {
+            e.preventDefault();
+            const formData = new FormData(e.currentTarget);
+            const departureDate = formData.get("departureDate")
+            
+            const data = {
+              username: user?.name,
+              email: user?.email,
+              image:user?.image,
+              ...destination,
+              departureDate: departureDate,
+              bookingDate: new Date()
+            }
+            const res = await fetch('http://localhost:8000/booking',{
+               method: "POST",
+                headers:{
+             'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+            })
+            const bookingresponse =await res.json();
+            console.log(bookingresponse);
+      }
+
   const [date, setDate] = useState(
     ISO_DATE.test(departureDate) ? departureDate : ""
   )
@@ -50,31 +80,28 @@ export default function BookingCard({
   return (
     <aside className="h-fit rounded-xl border border-border bg-card p-6 shadow-sm lg:sticky lg:top-6">
       <p className="text-sm text-muted-foreground">Starting from</p>
-      <p className="mt-1 text-4xl font-bold text-brand">${price}</p>
+      <p className="mt-1 text-4xl font-bold text-brand">${destination.price}</p>
       <p className="mt-0.5 text-sm text-muted-foreground">per person</p>
-
-      <div className="mt-5">
-        <Label htmlFor="departure-date" className="sr-only">
-          Departure date
-        </Label>
+       
+      <form onSubmit={handleBooking}>
         <Input
           id="departure-date"
           type="date"
-          value={date}
+          name="departureDate"
+          defaultValue={date}
           onChange={(event) => setDate(event.target.value)}
           className="h-10"
         />
-      </div>
-
+      
       <Button
-        type="button"
+        type="submit"
         onClick={handleBook}
         className="mt-4 h-11 w-full gap-2 bg-brand text-base font-semibold text-white hover:bg-brand-dark"
       >
         Book Now
         <ArrowRightIcon aria-hidden />
       </Button>
-
+        </form>
       <ul className="mt-5 space-y-3 border-t border-border pt-5">
         {PERKS.map((perk) => (
           <li
