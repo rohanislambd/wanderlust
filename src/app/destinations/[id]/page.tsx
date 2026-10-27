@@ -6,17 +6,15 @@ import {
   MapPinIcon,
   ServerOffIcon,
   StarIcon,
-  Trash2Icon,
 } from "lucide-react"
 
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
-import { buttonVariants } from "@/components/ui/button"
 import BookingCard from "@/components/booking-card"
 import DestinationHero from "@/components/destination-hero"
 import { playfairDisplay } from "@/lib/fonts"
 import { formatDuration } from "@/lib/format-duration"
-import { cn } from "cn"
 import EditDestinationDialog from "@/components/EditDestinationDialog"
+import DeleteDestination from "@/components/DeleteDestination"
 
 const DETAIL_API =
   process.env.NEXT_PUBLIC_DESTINATION_API ?? "http://localhost:8000/destination"
@@ -165,16 +163,7 @@ const DestinationDetailPage = async ({
         {/* TODO: point at a real edit route once one exists. */}
        
         <EditDestinationDialog destination={destination} />
-        <Link
-          href="/destinations"
-          className={cn(
-            buttonVariants({ variant: "outline" }),
-            "gap-2 border-destructive/30 text-destructive hover:bg-destructive/5 hover:text-destructive"
-          )}
-        >
-          <Trash2Icon aria-hidden />
-          Cancel
-        </Link>
+        <DeleteDestination id={destination?.id}/>
       </div>
     </div>
   )
