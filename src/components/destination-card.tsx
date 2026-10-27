@@ -4,6 +4,7 @@ import * as React from "react"
 import Image from "next/image"
 import Link from "next/link"
 import { Badge } from "@/components/ui/badge"
+import { formatDuration } from "@/lib/format-duration"
 import { ArrowUpRightIcon, CalendarDaysIcon, MapPinIcon, StarIcon } from "lucide-react"
 
 export type Destination = {
@@ -17,18 +18,6 @@ export type Destination = {
 }
 
 const FALLBACK_IMAGE = "/images/CTA.png"
-
-/** Backend stores either a raw day count ("7") or a ready-made label ("7 Days/6 Nights"). */
-function formatDuration(duration: string): string {
-  const trimmed = duration.trim()
-  if (/days?|nights?/i.test(trimmed)) return trimmed
-
-  const days = Number(trimmed)
-  if (!Number.isFinite(days) || days <= 0) return trimmed || "—"
-
-  const nights = Math.max(days - 1, 0)
-  return `${days} Day${days > 1 ? "s" : ""}/${nights} Night${nights === 1 ? "" : "s"}`
-}
 
 export default function DestinationCard({
   destination,
@@ -93,7 +82,7 @@ export default function DestinationCard({
         {formatDuration(destination.duration)}
       </div>
 
-      {/* TODO: point at a real detail page once `/destinations/[id]` exists */}
+      {/* Detail page lives at /destinations/[id] */}
       <Link
         href={`/destinations/${destination.id}`}
         className="mt-3 inline-flex w-fit items-center gap-1 text-sm font-bold text-brand uppercase transition-colors hover:text-brand-dark hover:underline"

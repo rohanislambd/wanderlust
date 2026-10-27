@@ -14,6 +14,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
+import toast from "react-hot-toast";
 
 const categories = ["Beach", "Mountain", "City", "Adventure", "Cultural"];
 
@@ -29,6 +30,7 @@ const initialForm = {
 };
 
 export default function AddDestinationPage() {
+
   const [form, setForm] = useState(initialForm);
 
   const update = (field: keyof typeof form, value: string) =>
@@ -44,8 +46,12 @@ export default function AddDestinationPage() {
         body: JSON.stringify(form)
     })
     
-    const data =await res.json();
+    const data = await res.json();
     console.log(data);
+    toast.success("Destination added successfully!");
+    setTimeout(() => {
+      window.location.reload();
+    }, 1000);
   };
 
 
