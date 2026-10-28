@@ -24,10 +24,24 @@ const MyBookingPage = async () => {
     });
     const user = session?.user;
 
-    const res = await fetch(`http://localhost:8000/my-booking/${user?.email}`, {
-        cache: 'no-store',
-    });
-    const bookings: IBooking[] = await res.json();
+    let bookings: IBooking[] = [];
+
+  try {
+    const res = await fetch(
+      `http://localhost:8000/my-booking/${user?.email}`,
+      {
+        cache: "no-store",
+      }
+    );
+
+    if (!res.ok) {
+      throw new Error("Failed to fetch bookings");
+    }
+
+    bookings = await res.json();
+  } catch (error) {
+    console.error("Error fetching bookings:", error);
+  }
 
     return (
         <section className="bg-background py-12 md:py-16">
