@@ -107,11 +107,11 @@ async function getDestination(id: string): Promise<IDestination | null> {
   const jwtToken = await auth.api.getToken({
     headers: await headers(),
   })
-  // console.log(jwtToken?.token);
+  const token = jwtToken?.token;
   try {
     const res = await fetch(`${DETAIL_API}/${id}`, {
       headers:{
-        authorization: jwtToken?.token,
+        authorization: `Bearer ${token}`,
       }
      
       })
