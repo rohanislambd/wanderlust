@@ -112,7 +112,12 @@ function toDestinationDetail(payload: unknown): IDestination | null {
 
 async function getDestination(id: string): Promise<IDestination | null> {
   try {
-    const res = await fetch(`${DETAIL_API}/${id}`, { cache: "no-store" })
+    const res = await fetch(`${DETAIL_API}/${id}`, {
+      headers:{
+        authorization: 'users logged in'
+      }
+     
+      })
     if (!res.ok) throw new Error(`API responded with ${res.status}`)
 
     const destination = toDestinationDetail(await res.json())
