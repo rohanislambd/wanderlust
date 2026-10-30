@@ -16,21 +16,13 @@ import { formatDuration } from "@/lib/format-duration"
 import EditDestinationDialog from "@/components/EditDestinationDialog"
 import DeleteDestination from "@/components/DeleteDestination"
 import { IDestination } from "@/types/destination"
+import { auth } from "@/lib/auth"
+import { headers } from "next/headers"
 
 const DETAIL_API =
   process.env.NEXT_PUBLIC_DESTINATION_API ?? "http://localhost:8000/destination"
 
-// type DestinationDetail = {
-//   id: string
-//   name: string
-//   country: string
-//   category: string
-//   price: string
-//   duration: string
-//   departureDate: string
-//   imageUrl: string | null
-//   description: string
-// }
+
 
 /** The API doesn't send highlights yet — show a curated set per category. */
 const HIGHLIGHTS: Record<string, string[]> = {
@@ -111,10 +103,15 @@ function toDestinationDetail(payload: unknown): IDestination | null {
 }
 
 async function getDestination(id: string): Promise<IDestination | null> {
+
+  const jwtToken = await auth.api.getToken({
+    headers: await headers(),
+  })
+  // console.log(jwtToken?.token);
   try {
     const res = await fetch(`${DETAIL_API}/${id}`, {
       headers:{
-        authorization: 'users logged in'
+        authorization: jwtToken?.token,
       }
      
       })
